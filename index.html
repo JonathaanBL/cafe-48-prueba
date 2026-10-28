@@ -137,7 +137,7 @@ h1, h2, h3, p { margin: 0; }
 .dish .price { font-size: var(--step-body); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; transition: color .25s var(--ease); }
 .dish:hover .display, .dish:focus-visible .display { color: var(--ink); }
 .dish[aria-pressed="true"] .display { color: var(--ink); transform: translateX(.08em); }
-.dish[aria-pressed="true"] .price::before { content: "In your order · "; }
+.dish[aria-pressed="true"] .price::before { content: var(--in, "In your order · "); }
 .dish:focus-visible { outline-color: var(--bg); }
 .tray {
   margin-top: 64px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between;
@@ -222,6 +222,104 @@ h1, h2, h3, p { margin: 0; }
   transform: translateY(26%); color: var(--bg); line-height: .8; margin-top: 2vh;
 }
 
+/* ---------- language switch ---------- */
+.langs { display: flex; gap: 4px; }
+.langs button {
+  background: none; border: 0; color: inherit; font: inherit; cursor: pointer; padding: 4px 6px;
+  transition: color .2s var(--ease), transform .2s var(--ease);
+}
+.langs button:hover { color: var(--accent); }
+.langs button:active { transform: scale(.92); }
+.langs button[aria-pressed="true"] { color: var(--accent); }
+html[lang="zh-Hant"] body { font-family: "Chivo", "Noto Sans TC", "Microsoft JhengHei", "PingFang TC", sans-serif; }
+html[lang="zh-Hant"] .display { letter-spacing: 0; }
+
+/* ---------- milk tea: 3D cup that fills as you scroll ---------- */
+.tea { position: relative; height: 240svh; background: var(--surface); }
+.tea-stage {
+  position: sticky; top: 0; height: 100svh; padding: 0 var(--m);
+  display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 20px; align-items: center;
+}
+.cup-box { grid-column: 1 / 8; height: 88svh; position: relative; }
+.cup-box canvas { width: 100%; height: 100%; display: block; }
+.cup-fallback { display: none; }
+.no-webgl .cup-box canvas { display: none; }
+.no-webgl .cup-fallback { display: block; width: 100%; height: 100%; object-fit: cover; }
+.tea-text { grid-column: 8 / 13; }
+.tea-text p { margin-top: 24px; max-width: 42ch; }
+.pour { font-weight: 900; font-size: var(--step-head); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; margin-top: 40px !important; color: var(--accent); }
+.pour small { display: block; font-size: var(--step-body); letter-spacing: -0.01em; color: var(--ink); margin-bottom: 8px; }
+
+/* ---------- order receipt that prints ---------- */
+.receipt-wrap { margin-top: 64px; max-width: 560px; perspective: 1000px; }
+.receipt-wrap[hidden] { display: none; }
+.slot { height: 16px; background: var(--ink); }
+.receipt {
+  background: #ffffff; color: var(--ink); padding: 28px 28px 32px; margin: 0 14px;
+  transform-origin: 50% 0; transform: rotateX(-92deg); opacity: 0;
+  transition: transform .8s var(--ease), opacity .3s var(--ease);
+}
+.receipt.open { transform: none; opacity: 1; }
+.r-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: var(--step-small); }
+.r-title { font-weight: 900; font-size: var(--step-lead); letter-spacing: -0.02em; margin: 20px 0 12px; }
+.r-lines { list-style: none; margin: 0; padding: 0; }
+.r-lines li { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; font-variant-numeric: tabular-nums; }
+.r-lines li.new { animation: print .45s var(--ease); }
+@keyframes print { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+.r-total { display: flex; justify-content: space-between; gap: 16px; margin-top: 16px; font-weight: 900; font-size: var(--step-lead); font-variant-numeric: tabular-nums; }
+.receipt .tray-acts { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.r-clear { background: none; border: 0; font: 700 var(--step-body)/1 "Chivo", sans-serif; color: var(--muted); cursor: pointer; padding: 12px 8px; text-decoration: underline; text-underline-offset: 4px; }
+.r-clear:hover { color: var(--ink); }
+
+/* ---------- the whole menu on a 3D carousel ---------- */
+.spin { padding: var(--gap) var(--m) 0; overflow: hidden; }
+.spin-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 56px; }
+.spin-head p { max-width: 40ch; }
+.ring { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; list-style: none; margin: 0; padding: 0; }
+.face { background: var(--surface); padding: 28px 28px 32px; }
+.face h3 { font-weight: 900; font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem); letter-spacing: -0.03em; line-height: 1; }
+.when { font-size: var(--step-small); color: var(--muted); margin: 10px 0 18px; }
+.face ul { list-style: none; margin: 0; padding: 0; }
+.face li { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0; }
+.face li span:last-child { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.spin-ctl { display: none; }
+.js .stage3d { position: relative; width: min(440px, 80vw); height: var(--h, 520px); margin: 0 auto; perspective: 1800px; touch-action: pan-y; cursor: grab; user-select: none; }
+.js .stage3d:active { cursor: grabbing; }
+.js .ring { display: block; position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(calc(var(--r, 400px) * -1)) rotateY(calc(var(--a, 0) * 1deg)); transition: transform .9s var(--ease); }
+.js .ring.drag { transition: none; }
+.js .face { position: absolute; inset: 0; overflow: hidden; backface-visibility: hidden; transform: rotateY(calc(var(--k) * 60deg)) translateZ(var(--r, 400px)); opacity: 0; visibility: hidden; transition: opacity .6s var(--ease), visibility 0s .6s; }
+.js .face.near, .js .ring.drag .face { opacity: .3; visibility: visible; transition-delay: 0s; }
+.js .face.front { opacity: 1; visibility: visible; transition-delay: 0s; }
+@media (max-width: 900px) { .js .face.near { opacity: 0; visibility: hidden; } }
+.js .spin-ctl { display: flex; justify-content: center; align-items: center; gap: 8px 20px; flex-wrap: wrap; margin-top: 48px; }
+.arrow { width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-ink); cursor: pointer; display: grid; place-items: center; transition: transform .2s var(--ease), background-color .2s var(--ease); }
+.arrow:hover { background: var(--ink); }
+.arrow:active { transform: scale(.9); }
+.arrow svg { width: 22px; height: 22px; }
+.tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; }
+.tabs button { background: none; border: 0; font: 700 var(--step-body)/1.2 "Chivo", sans-serif; color: var(--muted); cursor: pointer; padding: 8px 2px; transition: color .2s var(--ease); }
+html[lang="zh-Hant"] .tabs button { font-family: inherit; }
+.tabs button:hover, .tabs button[aria-pressed="true"] { color: var(--ink); }
+.tabs button[aria-pressed="true"] { color: var(--accent); }
+
+/* ---------- map ---------- */
+.map { height: min(70svh, 640px); background: var(--surface); }
+.map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+@media (max-width: 900px) {
+  .langs button { padding: 4px; }
+  .tea { height: 220svh; }
+  .tea-stage { grid-template-columns: 1fr; align-content: center; row-gap: 8px; }
+  .cup-box, .tea-text { grid-column: 1; }
+  .cup-box { height: 48svh; }
+  .tea-text p { margin-top: 12px; }
+  .pour { margin-top: 16px !important; }
+  .receipt { padding: 22px 20px 26px; margin: 0 10px; }
+  .face { padding: 22px 20px 26px; }
+  .arrow { width: 48px; height: 48px; }
+  .spin-ctl .tabs { order: 3; width: 100%; }
+}
+
 /* ---------- motion (3D) ---------- */
 @media (prefers-reduced-motion: no-preference) {
   /* hero portraits swing in like a door, then follow the pointer */
@@ -233,8 +331,10 @@ h1, h2, h3, p { margin: 0; }
   .js .dish.rv { transform: perspective(900px) rotateX(-88deg); transform-origin: 50% 0; transition-duration: .6s, 1s; }
   .js .dish.rv.in { transform: perspective(900px) rotateX(0); }
   /* quote lines flip up */
-  .js .qline.rv { transform: perspective(900px) rotateX(80deg); transform-origin: 50% 100%; }
-  .js .qline.rv.in { transform: perspective(900px) rotateX(0); }
+  /* quote lines flip up; visible by default, the flip only plays once they are reached */
+  .js .quote .rv { opacity: 1; transform: none; }
+  .js .qline.rv.in { animation: flipup 1s var(--ease) both; animation-delay: calc(var(--i, 0) * 90ms); transform-origin: 50% 100%; }
+  @keyframes flipup { from { transform: perspective(900px) rotateX(80deg); opacity: 0; } to { transform: perspective(900px) rotateX(0); opacity: 1; } }
   /* gallery pictures tilt up out of the page */
   .js .g.rv { transform: perspective(1200px) rotateX(22deg) translateY(80px) scale(.94); transform-origin: 50% 100%; transition-duration: .9s, 1.2s; }
   .js .g.rv.in { transform: none; }
@@ -264,7 +364,7 @@ h1, h2, h3, p { margin: 0; }
   .note { grid-column: 1 / 6; grid-row: 2; padding-left: 0; font-size: 15px; }
 
   .dish { flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 22px; }
-  .dish .display { font-size: 12.5vw; }
+  .dish .display { font-size: 9.5vw; }
   .dish .price { font-size: 15px; }
 
   .gallery .h2, .gallery .lede { grid-column: 1 / -1; margin-bottom: 24px; }
@@ -305,8 +405,13 @@ h1, h2, h3, p { margin: 0; }
       <a href="#top">Cafe 48 &amp; Restaurant</a>
       <ul>
         <li><a href="#menu">Menu</a></li>
-        <li><a href="#visit">Visit</a></li>
+        <li class="hide-s"><a href="#visit">Visit</a></li>
         <li class="hide-s"><a href="tel:+13478368857">(347) 836-8857</a></li>
+        <li class="langs" role="group" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="es" aria-pressed="false">ES</button>
+          <button type="button" data-lang="zh-Hant" aria-pressed="false" lang="zh-Hant">中文</button>
+        </li>
       </ul>
     </nav>
 
@@ -326,7 +431,7 @@ h1, h2, h3, p { margin: 0; }
     <h1 class="title display">Cafe 48</h1>
 
     <p class="hero-copy">
-      A Hong Kong-style café and bakery on 48th Avenue in Bayside. Milk tea, baked rice and wok noodles, every day.
+      <span class="hc">A Hong Kong-style café and bakery on 48th Avenue in Bayside. Milk tea, baked rice and wok noodles, every day.</span>
       <span class="status" id="status">Open daily · 8am–8pm</span>
     </p>
     <p class="count" aria-live="polite"><span id="now">Iced milk tea</span> · <span id="count">1</span> / 4</p>
@@ -346,6 +451,20 @@ h1, h2, h3, p { margin: 0; }
   <p class="note rv" style="--i:3"><strong>Good to know</strong>Steamed rice rolls from 11am to 3pm only. Pickup any time we’re open, delivery within 10 miles, party trays on request.</p>
 </section>
 
+<section class="tea" id="tea" aria-labelledby="tea-h">
+  <div class="tea-stage">
+    <div class="cup-box">
+      <canvas id="cup" role="img" aria-label="A 3D Hong Kong milk tea cup that fills as you scroll"></canvas>
+      <img class="cup-fallback" src="assets/hong-kong-milk-tea-cha-chaan-teng.jpg" width="1234" height="1240" alt="Hot Hong Kong milk tea in a classic white café cup" loading="lazy">
+    </div>
+    <div class="tea-text">
+      <h2 class="h2 rv" id="tea-h">Milk tea, pulled strong</h2>
+      <p class="rv" id="tea-p" style="--i:1">Black tea and evaporated milk, poured back and forth through a cloth filter until it runs smooth. Hot or iced, it goes with everything on the menu.</p>
+      <p class="pour rv" style="--i:2"><small id="tea-label">Pouring your cup</small><span id="tea-pct">0%</span></p>
+    </div>
+  </div>
+</section>
+
 <section class="menu" id="menu" aria-labelledby="menu-h">
   <div class="menu-head">
     <h2 class="h2 rv" id="menu-h">House favourites</h2>
@@ -359,14 +478,78 @@ h1, h2, h3, p { margin: 0; }
     <li><button class="dish rv" type="button" aria-pressed="false" data-price="10.40" style="--i:4"><span class="display">Fish balls</span><span class="price">$10.40</span></button></li>
     <li><button class="dish rv" type="button" aria-pressed="false" data-price="11.70" style="--i:5"><span class="display">Pepper wings</span><span class="price">$11.70</span></button></li>
   </ul>
-  <div class="tray" id="tray" hidden aria-live="polite">
-    <p class="tray-sum"><span id="tray-n">0 dishes</span> · <span id="tray-t">$0.00</span> before tax</p>
-    <div class="tray-acts">
-      <a class="btn" href="tel:+13478368857">Call it in</a>
-      <a class="btn btn--light" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online">Order online</a>
+  <div class="receipt-wrap" id="tray" hidden>
+    <div class="slot" aria-hidden="true"></div>
+    <div class="receipt" id="receipt" aria-live="polite">
+      <p class="r-head"><strong>Cafe 48 &amp; Restaurant</strong><span>212-09 48th Ave · (347) 836-8857</span></p>
+      <h3 class="r-title" id="r-title">Your order</h3>
+      <ul class="r-lines" id="r-lines"></ul>
+      <p class="r-total"><span id="r-sub">Subtotal before tax</span><span id="tray-t">$0.00</span></p>
+      <div class="tray-acts">
+        <a class="btn" id="r-call" href="tel:+13478368857">Call it in</a>
+        <a class="btn" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online">Order online</a>
+        <button class="r-clear" id="r-clear" type="button">Clear</button>
+      </div>
     </div>
   </div>
   <p class="full-menu">The full menu runs much longer: soups, snacks, egg omelets, rice congee, chow fun and chow mein, noodle soup, fried rice, baked rice and spaghetti, steamed rice rolls, sandwiches, toast, desserts, drinks and party trays. <a href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online#menu-section">See every dish and price</a>.</p>
+</section>
+
+<section class="spin" id="full-menu" aria-labelledby="spin-h">
+  <div class="spin-head">
+    <h2 class="h2 rv" id="spin-h">Spin the menu</h2>
+    <p class="rv" id="spin-p" style="--i:1">Six pages from the real menu, with today’s prices. Drag it, use the arrows, or pick a section.</p>
+  </div>
+  <div class="stage3d" id="stage3d">
+    <ul class="ring" id="ring">
+      <li class="face"><h3>Brunch sets</h3><p class="when">Mornings until 11am, with iced bubble tea or soda</p><ul>
+        <li><span>Fish cutlet burger + fries</span><span>$14.89</span></li>
+        <li><span>Chicken cutlet burger + fries</span><span>$14.89</span></li>
+        <li><span>Pork chop burger + fries</span><span>$14.89</span></li>
+      </ul></li>
+      <li class="face"><h3>Soups</h3><p class="when">11am onward</p><ul>
+        <li><span>Shrimp and pork wonton soup</span><span>$9.75</span></li>
+        <li><span>Thai Tom Kha chicken soup</span><span>$9.43</span></li>
+        <li><span>Tofu and pork ball soup</span><span>$9.10</span></li>
+        <li><span>Squash, tofu and preserved egg</span><span>$9.10</span></li>
+        <li><span>Soup of the day</span><span>$6.50</span></li>
+      </ul></li>
+      <li class="face"><h3>Snacks &amp; dim sum</h3><p class="when">11am onward</p><ul>
+        <li><span>Pork and shrimp shumai (4)</span><span>$8.13</span></li>
+        <li><span>Crystal shrimp dumplings (4)</span><span>$8.13</span></li>
+        <li><span>Pan-fried pork buns (4)</span><span>$8.13</span></li>
+        <li><span>Pan-fried turnip cake</span><span>$8.78</span></li>
+        <li><span>Curry fish ball, squid, pork skin</span><span>$10.40</span></li>
+        <li><span>Fried sesame balls (3)</span><span>$6.50</span></li>
+      </ul></li>
+      <li class="face"><h3>Fried rice</h3><p class="when">11am onward</p><ul>
+        <li><span>Young Chow fried rice</span><span>$14.30</span></li>
+        <li><span>Beef fried rice</span><span>$14.30</span></li>
+        <li><span>Salt fish and chicken fried rice</span><span>$15.60</span></li>
+        <li><span>Thai pineapple fried rice</span><span>$15.60</span></li>
+        <li><span>Seafood fried rice</span><span>$16.90</span></li>
+      </ul></li>
+      <li class="face"><h3>Baked rice</h3><p class="when">Rice or spaghetti, under melted cheese</p><ul>
+        <li><span>Breaded pork chop</span><span>$15.93</span></li>
+        <li><span>Pork chop in black pepper sauce</span><span>$15.93</span></li>
+        <li><span>Ground beef, cheese, tomato sauce</span><span>$15.93</span></li>
+        <li><span>Breaded fish cutlet</span><span>$15.93</span></li>
+        <li><span>Boneless chicken thigh</span><span>$15.93</span></li>
+      </ul></li>
+      <li class="face"><h3>Main plates</h3><p class="when">Served with rice</p><ul>
+        <li><span>Hainanese chicken</span><span>$14.30</span></li>
+        <li><span>Satay ox tail</span><span>$15.60</span></li>
+        <li><span>Curry beef brisket</span><span>$13.59</span></li>
+        <li><span>Vietnamese grilled pork chop</span><span>$12.29</span></li>
+        <li><span>General Tso’s chicken</span><span>$12.29</span></li>
+      </ul></li>
+    </ul>
+  </div>
+  <div class="spin-ctl">
+    <button class="arrow" id="spin-prev" type="button" aria-label="Previous section"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H6M12 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="3"/></svg></button>
+    <div class="tabs" id="tabs" role="group" aria-label="Menu sections"></div>
+    <button class="arrow" id="spin-next" type="button" aria-label="Next section"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3"/></svg></button>
+  </div>
 </section>
 
 <section class="gallery" aria-labelledby="gal-h">
@@ -398,8 +581,11 @@ h1, h2, h3, p { margin: 0; }
     <li class="row">Bayside, NY 11364</li>
     <li class="row">Every day, 8am–8pm</li>
     <li class="row"><a href="tel:+13478368857">(347) 836-8857</a></li>
-    <li class="row row--go">Hungry?<a class="go" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online" aria-label="Order online"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3"/></svg></a></li>
+    <li class="row row--go"><span class="hg">Hungry?</span><a class="go" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online" aria-label="Order online"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3"/></svg></a></li>
   </ul>
+  <div class="map">
+    <iframe title="Map: Cafe 48, 212-09 48th Ave, Bayside" src="https://www.google.com/maps?q=Cafe+48+%26+Restaurant,+212-09+48th+Ave,+Bayside,+NY+11364&amp;z=16&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+  </div>
 </section>
 
 <footer class="foot">
@@ -420,14 +606,90 @@ h1, h2, h3, p { margin: 0; }
   <p class="giant display rv" aria-hidden="true">Cafe 48</p>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 <script>
 document.documentElement.classList.add('js');
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const ORDER = 'https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online';
+let lang = 'en';
+
+// Words the script writes itself, per language.
+const S = {
+  en: { open: 'Open now', closesIn: 'closes in', closed: 'Closed now', opensAt: 'opens at 8am',
+        frames: ['Iced milk tea', 'Egg tarts', 'Baked pork chop rice', 'Beef chow fun'], inOrder: 'In your order · ',
+        pour: 'Pouring your cup', full: 'Ready to drink', prev: 'Previous section', next: 'Next section', spin: 'Menu carousel' },
+  es: { open: 'Abierto', closesIn: 'cierra en', closed: 'Cerrado', opensAt: 'abre a las 8am',
+        frames: ['Té con leche helado', 'Tartas de huevo', 'Arroz al horno con chuleta', 'Chow fun de res'], inOrder: 'En tu pedido · ',
+        pour: 'Sirviendo tu taza', full: 'Listo para tomar', prev: 'Sección anterior', next: 'Sección siguiente', spin: 'Carrusel del menú' },
+  'zh-Hant': { open: '營業中', closesIn: '距離關門還有', closed: '休息中', opensAt: '早上 8 時開門',
+        frames: ['凍奶茶', '蛋撻', '焗豬扒飯', '乾炒牛河'], inOrder: '已加入 · ',
+        pour: '正在斟茶', full: '可以飲啦', prev: '上一部分', next: '下一部分', spin: '旋轉餐牌' }
+};
+
+// Page text per language, keyed by CSS selector; English is read from the page itself.
+const T = {
+  es: {
+    '.nav a[href="#menu"]': 'Menú', '.nav a[href="#visit"]': 'Visítanos',
+    '.hero-copy .hc': 'Café y panadería al estilo de Hong Kong en la Avenida 48 de Bayside. Té con leche, arroz al horno y fideos al wok, todos los días.',
+    'a.btn[href$="order-online"]': 'Pedir en línea',
+    '#intro-h': 'Hong Kong, en la 48',
+    '.intro-text p': 'El cha chaan teng es el café diario de Hong Kong. Cafe 48 trae uno a Oakland Gardens: panadería al frente, wok atrás y té con leche todo el día.',
+    '.intro-pic figcaption': 'Té con leche caliente, al estilo clásico',
+    '.note': '<strong>Bueno saber</strong>Los rollos de arroz al vapor, solo de 11am a 3pm. Para recoger a cualquier hora, entrega hasta 10 millas y bandejas para fiestas por encargo.',
+    '#tea-h': 'Té con leche, bien cargado',
+    '#tea-p': 'Té negro y leche evaporada, pasados una y otra vez por un filtro de tela hasta quedar suaves. Caliente o con hielo, va con todo el menú.',
+    '#menu-h': 'Los favoritos',
+    '.menu-head p': 'Toca un plato para armar tu pedido. Lo sumamos y luego llamas o terminas en línea.',
+    '.dish .display': ['Sopa wonton', 'Pastel de nabo', 'Res al curry', 'Shumai', 'Bolas pescado', 'Alitas picantes'],
+    '#r-title': 'Tu pedido', '#r-sub': 'Subtotal antes de impuestos', '#r-call': 'Llamar', '#r-clear': 'Borrar',
+    '.full-menu': 'El menú completo es mucho más largo: sopas, botanas, omelets, congee, chow fun y chow mein, sopa de fideos, arroz frito, arroz y espagueti al horno, rollos de arroz, sándwiches, tostadas, postres, bebidas y bandejas para fiestas. <a href="' + ORDER + '#menu-section">Ver todos los platos y precios</a>.',
+    '#spin-h': 'Gira el menú',
+    '#spin-p': 'Seis páginas del menú real, con los precios de hoy. Arrástralo, usa las flechas o elige una sección.',
+    '.face h3': ['Brunch', 'Sopas', 'Botanas y dim sum', 'Arroz frito', 'Arroz al horno', 'Platos fuertes'],
+    '.face .when': ['Mañanas hasta las 11am, con té de burbujas o refresco', 'Desde las 11am', 'Desde las 11am', 'Desde las 11am', 'Arroz o espagueti, gratinado con queso', 'Con arroz'],
+    '#gal-h': 'La mesa de un café de Hong Kong',
+    '.gallery .lede': 'Panadería por la mañana, wok al mediodía y arroz al horno cuando hace frío. Estos son los clásicos de un cha chaan teng.',
+    '.g figcaption': ['Pan piña, el clásico de la panadería', 'Tostada francesa y té con leche', 'Comedor de un cha chaan teng, Hong Kong', 'Arroz al horno con chuleta de cerdo', 'Tartas de huevo', 'Chow fun de res, al wok'],
+    '#q-h': 'Lo que dicen los vecinos',
+    '.qby > span:nth-child(1)': 'Una reseña de Google', '.qby > span:nth-child(2)': '4.1 estrellas', '.qby a': '229 reseñas en Google',
+    '#v-h': 'Ven a vernos', '.row:nth-child(4)': 'Todos los días, 8am–8pm', '.hg': '¿Hambre?',
+    '.invite .h2': 'El té está listo.<br>Siéntate.',
+    '.foot-links a': ['Menú completo', '(347) 836-8857', 'Cómo llegar', 'Reseñas']
+  },
+  'zh-Hant': {
+    '.nav a[href="#menu"]': '菜單', '.nav a[href="#visit"]': '位置',
+    '.hero-copy .hc': '位於 Bayside 48 大道的港式茶餐廳兼餅店。奶茶、焗飯、鑊氣炒粉麵，天天供應。',
+    'a.btn[href$="order-online"]': '網上落單',
+    '#intro-h': '香港味道，就在 48 大道',
+    '.intro-text p': '茶餐廳是香港人的日常飯堂。Cafe 48 把它帶到 Oakland Gardens：門口有餅櫃，廚房有鑊氣，奶茶全日供應。',
+    '.intro-pic figcaption': '熱奶茶，經典沖法',
+    '.note': '<strong>小貼士</strong>腸粉只在上午 11 時至下午 3 時供應。營業時間內隨時自取，10 英里內外送，派對餐盤可預訂。',
+    '#tea-h': '港式奶茶，夠濃夠滑',
+    '#tea-p': '紅茶加淡奶，用布袋反覆撞茶，直到入口順滑。冷熱皆宜，配甚麼都好。',
+    '#menu-h': '招牌推介',
+    '.menu-head p': '點選菜式，自動幫你計數，然後致電或網上落單。',
+    '.dish .display': ['雲吞湯', '蘿蔔糕', '咖喱牛腩', '燒賣', '咖喱魚蛋', '椒鹽雞翼'],
+    '#r-title': '你的單', '#r-sub': '小計（未連稅）', '#r-call': '致電落單', '#r-clear': '清除',
+    '.full-menu': '完整菜單還有更多：湯、小食、奄列、粥、炒粉麵、湯麵、炒飯、焗飯及意粉、腸粉、三文治、多士、甜品、飲品和派對餐盤。<a href="' + ORDER + '#menu-section">查看所有菜式和價錢</a>。',
+    '#spin-h': '轉一轉，睇餐牌',
+    '#spin-p': '真實餐牌的六個部分，價錢以今日為準。可拖動、按箭咀或選擇分類。',
+    '.face h3': ['早午餐套餐', '湯', '小食點心', '炒飯', '焗飯', '主菜'],
+    '.face .when': ['早上至 11 時，配凍珍珠茶或汽水', '上午 11 時起', '上午 11 時起', '上午 11 時起', '飯或意粉，芝士焗', '配白飯'],
+    '#gal-h': '茶餐廳的一桌',
+    '.gallery .lede': '早上吃麵包，中午吃小炒，天冷來個焗飯。這些都是茶餐廳的經典。',
+    '.g figcaption': ['菠蘿包，餅店必備', '西多士配奶茶', '香港茶餐廳的用餐區', '焗豬扒飯', '蛋撻', '乾炒牛河'],
+    '#q-h': '街坊點評',
+    '.qby > span:nth-child(1)': 'Google 評論', '.qby > span:nth-child(2)': '4.1 星', '.qby a': 'Google 上 229 則評論',
+    '#v-h': '歡迎光臨', '.row:nth-child(4)': '每天 上午 8 時至晚上 8 時', '.hg': '肚餓？',
+    '.invite .h2': '奶茶已經沖好。<br>坐低嘆杯茶。',
+    '.foot-links a': ['完整菜單', '(347) 836-8857', '路線', '評論']
+  }
+};
+const EN = {};
+Object.keys(T.es).forEach(k => { EN[k] = $$(k).map(el => el.innerHTML); });
 
 // Pinned hero: swap the portrait (and the ground colour) as the page scrolls through the hero.
-const hero = document.querySelector('.hero');
-const stage = document.getElementById('stage');
-const frames = [...document.querySelectorAll('.frame')];
-const count = document.getElementById('count');
+const hero = $('.hero'), stage = $('#stage'), frames = $$('.frame'), count = $('#count');
 let cur = -1;
 function onScroll() {
   const r = hero.getBoundingClientRect();
@@ -439,46 +701,223 @@ function onScroll() {
   frames.forEach((f, n) => f.classList.toggle('on', n === i));
   stage.style.setProperty('--ground', frames[i].dataset.ground);
   count.textContent = i + 1;
-  document.getElementById('now').textContent = frames[i].querySelector('img').dataset.name;
+  $('#now').textContent = S[lang].frames[i];
 }
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
 // Open / closed right now, in Bayside's own time zone.
-(function status() {
+function status() {
+  const s = S[lang];
   const ny = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
   const mins = ny.getHours() * 60 + ny.getMinutes();
   const open = 8 * 60, close = 20 * 60;
-  const el = document.getElementById('status');
   if (mins >= open && mins < close) {
     const left = close - mins, h = Math.floor(left / 60), m = left % 60;
-    el.innerHTML = '<b>Open now</b> · closes in ' + (h ? h + 'h ' : '') + m + 'm';
+    $('#status').innerHTML = '<b>' + s.open + '</b> · ' + s.closesIn + ' ' + (h ? h + 'h ' : '') + m + 'm';
   } else {
-    el.innerHTML = '<b>Closed now</b> · opens at 8am';
+    $('#status').innerHTML = '<b>' + s.closed + '</b> · ' + s.opensAt;
   }
-})();
+}
+status();
 
-// Order tray: tap dishes, see the running total.
-const dishes = [...document.querySelectorAll('.dish')];
-const tray = document.getElementById('tray');
-function sum() {
+// Order receipt: tap dishes, the ticket prints out with a running total.
+const dishes = $$('.dish'), tray = $('#tray'), receipt = $('#receipt'), rLines = $('#r-lines');
+function sum(added) {
   const on = dishes.filter(d => d.getAttribute('aria-pressed') === 'true');
-  const t = on.reduce((s, d) => s + Number(d.dataset.price), 0);
+  const opening = tray.hidden && on.length > 0;
   tray.hidden = on.length === 0;
-  document.getElementById('tray-n').textContent = on.length + (on.length === 1 ? ' dish' : ' dishes');
-  document.getElementById('tray-t').textContent = '$' + t.toFixed(2);
+  rLines.replaceChildren(...on.map(d => {
+    const li = document.createElement('li'), a = document.createElement('span'), b = document.createElement('span');
+    a.textContent = d.querySelector('.display').textContent;
+    b.textContent = '$' + Number(d.dataset.price).toFixed(2);
+    li.append(a, b);
+    if (d === added) li.className = 'new';
+    return li;
+  }));
+  $('#tray-t').textContent = '$' + on.reduce((s, d) => s + Number(d.dataset.price), 0).toFixed(2);
+  if (opening) {
+    receipt.classList.remove('open');
+    requestAnimationFrame(() => requestAnimationFrame(() => receipt.classList.add('open')));
+  }
 }
 dishes.forEach(d => d.addEventListener('click', () => {
-  d.setAttribute('aria-pressed', d.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-  sum();
+  const on = d.getAttribute('aria-pressed') !== 'true';
+  d.setAttribute('aria-pressed', on);
+  sum(on ? d : null);
 }));
+$('#r-clear').addEventListener('click', () => {
+  dishes.forEach(d => d.setAttribute('aria-pressed', 'false'));
+  sum();
+  dishes[0].focus();
+});
+
+// The whole menu on a six-sided 3D carousel: drag, arrows, keys or section buttons.
+const ring = $('#ring'), faces = [...ring.children], st3 = $('#stage3d'), tabs = $('#tabs'), N = faces.length;
+let pos = 0;
+faces.forEach((f, k) => {
+  f.style.setProperty('--k', k);
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.addEventListener('click', () => {
+    let d = ((k - pos) % N + N) % N;
+    if (d > N / 2) d -= N;
+    go(pos + d);
+  });
+  tabs.append(b);
+});
+function labelTabs() {
+  [...tabs.children].forEach((b, k) => { b.textContent = faces[k].querySelector('h3').textContent; });
+  $('#spin-prev').setAttribute('aria-label', S[lang].prev);
+  $('#spin-next').setAttribute('aria-label', S[lang].next);
+  st3.setAttribute('aria-label', S[lang].spin);
+}
+function layout() {
+  st3.style.setProperty('--h', '0px');
+  const h = Math.max(...faces.map(f => f.scrollHeight));
+  st3.style.setProperty('--h', h + 'px');
+  ring.style.setProperty('--r', Math.round(st3.offsetWidth / 2 / Math.tan(Math.PI / N) + 90) + 'px');
+}
+function go(p) {
+  pos = p;
+  const i = ((p % N) + N) % N;
+  ring.style.setProperty('--a', -p * 360 / N);
+  faces.forEach((f, k) => {
+    const d = Math.abs(k - i);
+    f.classList.toggle('front', k === i);
+    f.classList.toggle('near', d === 1 || d === N - 1);
+    f.inert = k !== i;
+  });
+  [...tabs.children].forEach((b, k) => b.setAttribute('aria-pressed', k === i));
+}
+$('#spin-prev').addEventListener('click', () => go(pos - 1));
+$('#spin-next').addEventListener('click', () => go(pos + 1));
+st3.tabIndex = 0;
+st3.setAttribute('role', 'region');
+st3.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') { go(pos - 1); e.preventDefault(); }
+  if (e.key === 'ArrowRight') { go(pos + 1); e.preventDefault(); }
+});
+let sx = null;
+st3.addEventListener('pointerdown', e => { sx = e.clientX; ring.classList.add('drag'); st3.setPointerCapture(e.pointerId); });
+st3.addEventListener('pointermove', e => {
+  if (sx === null) return;
+  ring.style.setProperty('--a', -pos * 360 / N + (e.clientX - sx) / st3.offsetWidth * 90);
+});
+const dragEnd = e => {
+  if (sx === null) return;
+  const steps = Math.round((e.clientX - sx) / st3.offsetWidth * 1.5);
+  sx = null;
+  ring.classList.remove('drag');
+  go(pos - steps);
+};
+st3.addEventListener('pointerup', dragEnd);
+st3.addEventListener('pointercancel', dragEnd);
+addEventListener('resize', layout);
+layout();
+go(0);
+
+// 3D milk tea cup (three.js): it turns and fills as the section scrolls by.
+function initCup() {
+  const box = $('.cup-box'), canvas = $('#cup'), sec = $('#tea'), pct = $('#tea-pct'), label = $('#tea-label');
+  let renderer;
+  try {
+    if (!window.THREE) throw new Error('three.js did not load');
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  } catch (e) {
+    document.documentElement.classList.add('no-webgl');
+    return;
+  }
+  const G = THREE, V = (x, y) => new G.Vector2(x, y);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputEncoding = G.sRGBEncoding;
+  const scene = new G.Scene();
+  const cam = new G.PerspectiveCamera(30, 1, 0.1, 100);
+  cam.position.set(0, 6.6, 7.2);
+  cam.lookAt(0, 0.8, 0);
+  scene.add(new G.HemisphereLight(0xffffff, 0x9aa3b2, 0.95));
+  const sun = new G.DirectionalLight(0xffffff, 0.85);
+  sun.position.set(4, 7, 5);
+  scene.add(sun);
+  const porcelain = new G.MeshStandardMaterial({ color: 0xffffff, roughness: 0.22 });
+  const cup = new G.Group();
+  scene.add(cup);
+  // body: one lathe profile, outside up and inside back down, so the wall has thickness
+  cup.add(new G.Mesh(new G.LatheGeometry([V(0, 0), V(1, 0), V(1.1, 0.1), V(1.22, 1.9), V(1.28, 2.05), V(1.17, 2.05), V(1.1, 1.9), V(0.98, 0.22), V(0, 0.22)], 72), porcelain));
+  const band = new G.Mesh(new G.CylinderGeometry(1.216, 1.196, 0.32, 72, 1, true), new G.MeshStandardMaterial({ color: 0x1f2de6, roughness: 0.35 }));
+  band.position.y = 1.55;
+  cup.add(band);
+  const handle = new G.Mesh(new G.TorusGeometry(0.48, 0.11, 20, 48, Math.PI), porcelain);
+  handle.rotation.z = -Math.PI / 2;
+  handle.position.set(1.18, 1.1, 0);
+  cup.add(handle);
+  cup.add(new G.Mesh(new G.LatheGeometry([V(0, -0.12), V(1.7, -0.12), V(2.15, 0.06), V(2.05, 0.08), V(1.6, 0), V(0, 0)], 72), porcelain));
+  const tea = new G.Mesh(new G.CylinderGeometry(1, 1, 1, 72), new G.MeshStandardMaterial({ color: 0x8a5634, roughness: 0.12 }));
+  cup.add(tea);
+
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let level = 0, visible = false, running = false;
+  const t0 = performance.now();
+  function size() {
+    const w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    cam.aspect = w / h;
+    cam.updateProjectionMatrix();
+  }
+  function draw(now) {
+    const r = sec.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, -r.top / (r.height - innerHeight) || 0));
+    level += (p - level) * (still ? 1 : 0.12);
+    const h = Math.max(0.001, level * 1.6);
+    tea.scale.set(0.98 + 0.06 * level, h, 0.98 + 0.06 * level);
+    tea.position.y = 0.22 + h / 2;
+    cup.rotation.y = -0.6 + level * Math.PI * 1.2 + (still ? 0 : (now - t0) / 7000);
+    renderer.render(scene, cam);
+    pct.textContent = Math.round(level * 100) + '%';
+    label.textContent = level > 0.97 ? S[lang].full : S[lang].pour;
+    if (visible) requestAnimationFrame(draw); else running = false;
+  }
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible && !running) { running = true; requestAnimationFrame(draw); }
+  }).observe(sec);
+  addEventListener('resize', size);
+  size();
+  draw(t0);
+}
+addEventListener('load', initCup);
+
+// Language switch: English, Spanish, Traditional Chinese.
+function setLang(l) {
+  lang = l;
+  const d = T[l];
+  for (const k in EN) $$(k).forEach((el, i) => {
+    const v = d && d[k];
+    el.innerHTML = v == null ? EN[k][i] : Array.isArray(v) ? v[i] : v;
+  });
+  document.documentElement.lang = l;
+  document.documentElement.style.setProperty('--in', JSON.stringify(S[l].inOrder));
+  $$('.langs button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === l));
+  $('#now').textContent = S[l].frames[Math.max(cur, 0)];
+  status();
+  sum();
+  labelTabs();
+  layout();
+  try { localStorage.setItem('lang', l); } catch (e) {}
+}
+$$('.langs button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+let saved = null;
+try { saved = localStorage.getItem('lang'); } catch (e) {}
+const nav = (navigator.language || '').toLowerCase();
+setLang(saved && S[saved] ? saved : nav.startsWith('es') ? 'es' : nav.startsWith('zh') ? 'zh-Hant' : 'en');
 
 // 3D tilt that follows the pointer: hero portrait and gallery pictures.
 if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
   const tilt = (el, target, max) => {
     el.addEventListener('pointermove', e => {
       const r = el.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
       const t = target();
       t.style.setProperty('--ry', (x * max) + 'deg');
       t.style.setProperty('--rx', (-y * max) + 'deg');
@@ -490,14 +929,18 @@ if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').mat
     });
   };
   tilt(stage, () => frames[cur], 14);
-  document.querySelectorAll('.g').forEach(g => tilt(g, () => g.querySelector('img'), 12));
+  $$('.g').forEach(g => tilt(g, () => g.querySelector('img'), 12));
 }
 
 // Entrances, once per element.
 const io = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-}), { rootMargin: '0px 0px -10% 0px' });
-document.querySelectorAll('.rv').forEach(el => io.observe(el));
+}), { rootMargin: '0px 0px 15% 0px' });
+$$('.rv').forEach(el => io.observe(el));
+// A jump (anchor link, fast fling) can skip an element entirely; show anything already scrolled past.
+addEventListener('scroll', () => {
+  $$('.rv:not(.in)').forEach(el => { if (el.getBoundingClientRect().top < innerHeight) { el.classList.add('in'); io.unobserve(el); } });
+}, { passive: true });
 </script>
 </body>
 </html>
