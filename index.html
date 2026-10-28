@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cafe 48 · Bayside</title>
+<meta name="description" content="Cafe 48 & Restaurant: a Hong Kong-style café and bakery on 48th Avenue in Bayside, Queens. Milk tea, baked rice, chow fun and dim sum, open every day 8am–8pm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #eef0f3;
+  --surface: #e2e5ea;
+  --ink: #0b0c0e;
+  --muted: #5d6470;
+  --accent: #1f2de6;
+  --accent-ink: #ffffff;
+  --field-1: #1f2de6;
+  --field-1-ink: #ffffff;
+
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-lead: clamp(1.375rem, 1.1rem + 0.9vw, 2.125rem);
+  --step-head: clamp(2.5rem, 1.2rem + 5vw, 5.5rem);
+  --step-mono: clamp(4rem, 10vw, 9.375rem);
+
+  --m: clamp(16px, 2vw, 32px);
+  --gap: clamp(120px, 14vw, 200px);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Chivo", system-ui, sans-serif;
+  font-size: var(--step-body);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  font-kerning: normal;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+.btn {
+  display: inline-flex; align-items: center; gap: .6em;
+  background: var(--accent); color: var(--accent-ink);
+  font: 700 var(--step-body)/1 "Chivo", sans-serif;
+  padding: 1.05em 1.5em; text-decoration: none; border: 0; cursor: pointer;
+  transition: transform .2s var(--ease), background-color .2s var(--ease);
+}
+.btn:hover { background: var(--ink); }
+.btn:active { transform: scale(.96); }
+.btn--light { background: var(--bg); color: var(--ink); }
+.btn--light:hover { background: var(--accent); color: var(--accent-ink); }
+
+.display {
+  font-weight: 900; text-transform: uppercase;
+  letter-spacing: -0.05em; line-height: .88;
+}
+.h2 {
+  font-weight: 900; font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem);
+  letter-spacing: -0.03em; line-height: 1;
+}
+
+/* ---------- hero: pinned title over portraits ---------- */
+.hero { position: relative; height: 320svh; }
+.stage {
+  position: sticky; top: 0; height: 100svh; overflow: hidden;
+  background: var(--ground, var(--bg));
+  transition: background-color .7s var(--ease);
+}
+.nav {
+  position: absolute; z-index: 4; inset: 0 var(--m) auto;
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-top: 24px; font-weight: 700; font-size: var(--step-small);
+}
+.nav a { text-decoration: none; }
+.nav a:hover { color: var(--accent); }
+.nav ul { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
+.frame {
+  position: absolute; left: 50%; top: 90px; bottom: 0;
+  aspect-ratio: 2 / 3; height: calc(100svh - 90px);
+  transform: translateX(-50%);
+  opacity: 0; visibility: hidden; transition: opacity .7s var(--ease), visibility .7s, transform 1s var(--ease);
+  margin: 0;
+}
+.frame img { width: 100%; height: 100%; object-fit: cover; }
+.frame.on { opacity: 1; visibility: visible; }
+.title {
+  position: absolute; z-index: 3; left: 0; right: 0; top: 96px;
+  text-align: center; color: var(--accent);
+  font-size: 19.5vw; white-space: nowrap;
+}
+.hero-copy {
+  position: absolute; z-index: 3; left: var(--m); bottom: 32px; max-width: 28ch;
+  font-weight: 700; font-size: var(--step-body); line-height: 1.4;
+}
+.status { display: block; margin-top: 14px; font-weight: 400; }
+.status b { font-weight: 700; color: var(--accent); }
+.hero-act { position: absolute; z-index: 3; right: var(--m); bottom: 32px; }
+.count {
+  position: absolute; z-index: 3; right: var(--m); bottom: 110px;
+  font-size: var(--step-small); font-weight: 700; font-variant-numeric: tabular-nums;
+}
+
+/* ---------- intro ---------- */
+.intro {
+  display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 20px;
+  padding: var(--gap) var(--m);
+}
+.intro-text { grid-column: 6 / 13; padding-top: 6vh; }
+.intro-text .h2 { margin-bottom: 40px; }
+.intro-text p { font-size: var(--step-lead); line-height: 1.25; text-indent: 3em; letter-spacing: -0.02em; }
+.intro-pic { grid-column: 1 / 4; grid-row: 2; margin: -6vw 0 0; }
+.intro-pic img { aspect-ratio: 1; object-fit: cover; width: 100%; }
+.intro-pic figcaption, .note { font-size: var(--step-small); color: var(--muted); margin-top: 10px; }
+.note { grid-column: 4 / 7; grid-row: 2; align-self: end; max-width: 30ch; color: var(--ink); font-size: var(--step-body); padding-left: 20px; }
+.note strong { display: block; margin-bottom: 6px; }
+
+/* ---------- list: one item per poster line ---------- */
+.menu { background: var(--field-1); color: var(--field-1-ink); padding: 80px var(--m) 96px; }
+.menu-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 56px; }
+.menu-head p { max-width: 38ch; }
+.dishes { list-style: none; margin: 0; padding: 0; }
+.dish {
+  width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 24px;
+  background: none; border: 0; color: inherit; cursor: pointer; text-align: left; padding: 0;
+  font-family: inherit;
+}
+.dish .display { font-size: var(--step-mono); transition: color .25s var(--ease), transform .35s var(--ease); }
+.dish .price { font-size: var(--step-body); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; transition: color .25s var(--ease); }
+.dish:hover .display, .dish:focus-visible .display { color: var(--ink); }
+.dish[aria-pressed="true"] .display { color: var(--ink); transform: translateX(.08em); }
+.dish[aria-pressed="true"] .price::before { content: "In your order · "; }
+.dish:focus-visible { outline-color: var(--bg); }
+.tray {
+  margin-top: 64px; display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: center; justify-content: space-between;
+  background: var(--ink); color: var(--bg); padding: 22px 24px;
+}
+.tray[hidden] { display: none; }
+.tray-sum { font-size: var(--step-lead); font-weight: 900; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.tray-acts { display: flex; gap: 12px; flex-wrap: wrap; }
+.tray .btn { background: var(--accent); }
+.tray .btn:hover { background: var(--bg); color: var(--ink); }
+.tray .btn--light { background: var(--bg); color: var(--ink); }
+.tray .btn--light:hover { background: var(--accent); color: var(--accent-ink); }
+.full-menu { margin-top: 56px; max-width: 70ch; }
+.full-menu a { font-weight: 700; }
+
+/* ---------- gallery: staggered pairs ---------- */
+.gallery { padding: var(--gap) var(--m) 0; display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 20px; }
+.gallery .h2 { grid-column: 1 / 7; margin-bottom: 64px; }
+.gallery .lede { grid-column: 7 / 12; margin-bottom: 64px; }
+.g { margin: 0 0 8vh; }
+.g img { width: 100%; object-fit: cover; }
+.g figcaption { font-size: var(--step-small); color: var(--muted); margin-top: 10px; }
+.g1 { grid-column: 1 / 6; } .g1 img { aspect-ratio: 3/4; }
+.g2 { grid-column: 7 / 13; margin-top: 10vh; } .g2 img { aspect-ratio: 5/4; }
+.g3 { grid-column: 5 / 13; } .g3 img { aspect-ratio: 3/2; }
+.g4 { grid-column: 1 / 5; margin-top: 0; } .g4 img { aspect-ratio: 4/5; }
+.g5 { grid-column: 8 / 13; } .g5 img { aspect-ratio: 3/4; }
+.g6 { grid-column: 1 / 8; margin-top: 10vh; } .g6 img { aspect-ratio: 5/4; }
+.g4 { grid-row: 4; } .g3 { grid-row: 4; }
+.g5 { grid-row: 5; } .g6 { grid-row: 5; }
+
+/* ---------- testimonial: spread edge to edge ---------- */
+.quote { background: var(--surface); padding: 140px var(--m); }
+.quote .h2 { margin-bottom: 80px; }
+.quote blockquote { margin: 0; }
+.qline {
+  display: flex; justify-content: space-between; font-size: var(--step-mono);
+  margin-bottom: .18em;
+}
+.qby { display: flex; justify-content: space-between; gap: 16px; margin-top: 64px; font-size: var(--step-body); font-weight: 700; }
+.qby a { text-decoration-thickness: 2px; text-underline-offset: 4px; }
+
+/* ---------- contact: address in display rows ---------- */
+.visit .h2 { padding: var(--gap) var(--m) 48px; }
+.rows { list-style: none; margin: 0; padding: 0; }
+.row {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;
+  min-height: 150px; padding: 0 var(--m) 26px;
+  font-size: var(--step-head); line-height: 1; letter-spacing: -0.03em;
+}
+.row:nth-child(odd) { background: var(--surface); }
+.row a { text-decoration: none; }
+.row a:hover { color: var(--accent); }
+.row small { font-size: var(--step-body); letter-spacing: -0.01em; font-weight: 700; padding-bottom: .4em; }
+.row--go { background: var(--accent) !important; color: var(--accent-ink); }
+.go {
+  display: inline-grid; place-items: center; width: .9em; height: .9em; border-radius: 50%;
+  background: var(--accent-ink); color: var(--accent); text-decoration: none; margin-left: 24px;
+  vertical-align: .05em; transition: transform .25s var(--ease);
+}
+.go:hover { transform: translateX(8px); }
+.go svg { width: 45%; height: 45%; }
+
+/* ---------- footer ---------- */
+.foot {
+  position: relative; overflow: hidden; background: var(--ink); color: var(--bg);
+  min-height: 100svh; padding: var(--gap) var(--m) 0; margin-top: 0;
+  display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 20px; align-content: start;
+}
+.invite { grid-column: 1 / 9; }
+.invite .h2 { font-size: var(--step-head); margin-bottom: 40px; }
+.foot-links { grid-column: 10 / 13; list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-weight: 700; }
+.foot-links a { text-decoration: none; } .foot-links a:hover { color: #8f97ff; }
+.legal {
+  grid-column: 1 / 13; margin-top: 12vh; display: flex; justify-content: space-between; gap: 32px;
+  font-size: var(--step-small); line-height: 1.5;
+}
+.credits { max-width: 90ch; }
+.credits a { color: inherit; }
+.giant {
+  grid-column: 1 / 13; font-size: 30vw; white-space: nowrap; margin-left: -.04em;
+  transform: translateY(26%); color: var(--bg); line-height: .8; margin-top: 2vh;
+}
+
+/* ---------- motion (3D) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* hero portraits swing in like a door, then follow the pointer */
+  .frame { transform: translateX(-50%) perspective(1400px) rotateY(-32deg) translateZ(-160px); transform-origin: 0 50%; }
+  .frame.on { transform: translateX(-50%) perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
+  .js .rv { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .9s var(--ease); transition-delay: calc(var(--i, 0) * 80ms); }
+  .js .rv.in { opacity: 1; transform: none; }
+  /* menu lines drop down like a flip board */
+  .js .dish.rv { transform: perspective(900px) rotateX(-88deg); transform-origin: 50% 0; transition-duration: .6s, 1s; }
+  .js .dish.rv.in { transform: perspective(900px) rotateX(0); }
+  /* quote lines flip up */
+  .js .qline.rv { transform: perspective(900px) rotateX(80deg); transform-origin: 50% 100%; }
+  .js .qline.rv.in { transform: perspective(900px) rotateX(0); }
+  /* gallery pictures tilt up out of the page */
+  .js .g.rv { transform: perspective(1200px) rotateX(22deg) translateY(80px) scale(.94); transform-origin: 50% 100%; transition-duration: .9s, 1.2s; }
+  .js .g.rv.in { transform: none; }
+  .g img { transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--s, 1)); transition: transform .5s var(--ease); }
+  /* the closing name rises from below the floor */
+  .js .giant.rv { transform: perspective(700px) rotateX(75deg) translateY(26%); transform-origin: 50% 100%; transition-duration: .8s, 1.4s; }
+  .js .giant.rv.in { transform: translateY(26%); }
+}
+
+/* ---------- phone ---------- */
+@media (max-width: 900px) {
+  .nav ul { gap: 16px; }
+  .nav .hide-s { display: none; }
+  .title { font-size: 21vw; top: 72px; }
+  .frame { left: 16px; right: 16px; top: 128px; bottom: auto; height: auto; width: auto; transform: perspective(1000px) rotateY(-30deg); transform-origin: 0 50%; }
+  .frame.on { transform: none; }
+  .frame img { aspect-ratio: 2/3; height: auto; max-height: calc(100svh - 380px); }
+  .hero-copy { bottom: 92px; right: 16px; max-width: none; }
+  .hero-act { bottom: 20px; right: 16px; }
+  .count { left: 16px; right: auto; bottom: 36px; }
+
+  .intro { padding-left: 20px; padding-right: 20px; }
+  .intro-text { grid-column: 1 / -1; padding-top: 0; }
+  .intro-text p { text-indent: 0; font-size: 22px; }
+  .intro-pic { grid-column: 6 / 13; grid-row: 2; margin-top: 48px; }
+  .intro-pic img { aspect-ratio: 4/5; }
+  .note { grid-column: 1 / 6; grid-row: 2; padding-left: 0; font-size: 15px; }
+
+  .dish { flex-direction: column; align-items: flex-start; gap: 6px; margin-bottom: 22px; }
+  .dish .display { font-size: 12.5vw; }
+  .dish .price { font-size: 15px; }
+
+  .gallery .h2, .gallery .lede { grid-column: 1 / -1; margin-bottom: 24px; }
+  .gallery .lede { margin-bottom: 56px; }
+  .g { margin: 0 0 64px !important; grid-row: auto !important; }
+  .g1 { grid-column: 1 / 10; } .g2 { grid-column: 3 / 13; } .g3 { grid-column: 1 / 8; }
+  .g4 { grid-column: 1 / 13; margin-left: calc(-1 * var(--m)) !important; margin-right: calc(-1 * var(--m)) !important; }
+  .g4 figcaption { padding-left: var(--m); }
+  .g5 { grid-column: 4 / 13; } .g6 { grid-column: 1 / 11; }
+
+  .quote { padding: 96px 16px; }
+  .qline { font-size: 13vw; }
+  .qby { flex-direction: column; font-size: 15px; gap: 6px; }
+  .qby span:nth-child(2) { align-self: center; } .qby span:nth-child(3) { align-self: flex-end; }
+
+  .row { font-size: 9.6vw; min-height: 84px; padding: 0 16px 16px; }
+  .row small { display: none; }
+  .row--go { justify-content: space-between; }
+  .go { width: 56px; height: 56px; font-size: 16px; }
+
+  .invite, .foot-links, .legal { grid-column: 1 / -1; }
+  .invite .h2 { font-size: 11vw; }
+  .invite .btn { width: 100%; justify-content: center; }
+  .foot-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 40px; font-size: 15px; }
+  .legal { flex-direction: column; margin-top: 64px; }
+  .giant { font-size: 34vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0s !important; transition-delay: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero" id="top" aria-label="Cafe 48">
+  <div class="stage" id="stage">
+    <nav class="nav" aria-label="Main">
+      <a href="#top">Cafe 48 &amp; Restaurant</a>
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#visit">Visit</a></li>
+        <li class="hide-s"><a href="tel:+13478368857">(347) 836-8857</a></li>
+      </ul>
+    </nav>
+
+    <figure class="frame on" data-ground="#eef0f3">
+      <img src="assets/hong-kong-milk-tea-cold-bun-house.jpg" width="1920" height="2550" alt="Iced Hong Kong-style milk tea in a red longevity mug on a marble table" data-name="Iced milk tea">
+    </figure>
+    <figure class="frame" data-ground="#e3ebef">
+      <img src="assets/custard-egg-tarts-hong-kong.jpg" width="1920" height="2560" alt="Custard egg tarts" data-name="Egg tarts" loading="lazy">
+    </figure>
+    <figure class="frame" data-ground="#f0e4df">
+      <img src="assets/baked-pork-chop-rice-in-tomato-sauce.jpg" width="1920" height="1440" alt="Baked pork chop rice under tomato sauce and melted cheese" data-name="Baked pork chop rice" loading="lazy">
+    </figure>
+    <figure class="frame" data-ground="#e7ebe2">
+      <img src="assets/dry-fried-beef-ho-fun-ho-chiak.jpg" width="1920" height="1440" alt="Dry-fried beef chow fun with bean sprouts" data-name="Beef chow fun" loading="lazy">
+    </figure>
+
+    <h1 class="title display">Cafe 48</h1>
+
+    <p class="hero-copy">
+      A Hong Kong-style café and bakery on 48th Avenue in Bayside. Milk tea, baked rice and wok noodles, every day.
+      <span class="status" id="status">Open daily · 8am–8pm</span>
+    </p>
+    <p class="count" aria-live="polite"><span id="now">Iced milk tea</span> · <span id="count">1</span> / 4</p>
+    <a class="btn hero-act" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online">Order online</a>
+  </div>
+</section>
+
+<section class="intro" aria-labelledby="intro-h">
+  <div class="intro-text">
+    <h2 class="h2 rv" id="intro-h">Hong Kong, on 48th Ave</h2>
+    <p class="rv" style="--i:1">A cha chaan teng is Hong Kong’s everyday café. Cafe 48 brings one to Oakland Gardens: a bakery case up front, a wok going in back, milk tea all day.</p>
+  </div>
+  <figure class="intro-pic rv" style="--i:2">
+    <img src="assets/hong-kong-milk-tea-cha-chaan-teng.jpg" width="1234" height="1240" alt="Hot Hong Kong milk tea in a classic white café cup" loading="lazy">
+    <figcaption>Hot milk tea, the classic way</figcaption>
+  </figure>
+  <p class="note rv" style="--i:3"><strong>Good to know</strong>Steamed rice rolls from 11am to 3pm only. Pickup any time we’re open, delivery within 10 miles, party trays on request.</p>
+</section>
+
+<section class="menu" id="menu" aria-labelledby="menu-h">
+  <div class="menu-head">
+    <h2 class="h2 rv" id="menu-h">House favourites</h2>
+    <p class="rv" style="--i:1">Tap a dish to build your order. We’ll add it up, then you call it in or finish online.</p>
+  </div>
+  <ul class="dishes">
+    <li><button class="dish rv" type="button" aria-pressed="false" data-price="9.75"><span class="display">Wonton soup</span><span class="price">$9.75</span></button></li>
+    <li><button class="dish rv" type="button" aria-pressed="false" data-price="8.78" style="--i:1"><span class="display">Turnip cake</span><span class="price">$8.78</span></button></li>
+    <li><button class="dish rv" type="button" aria-pressed="false" data-price="10.73" style="--i:2"><span class="display">Curry brisket</span><span class="price">$10.73</span></button></li>
+    <li><button class="dish rv" type="button" aria-pressed="false" data-price="8.13" style="--i:3"><span class="display">Shumai</span><span class="price">$8.13</span></button></li>
+    <li><button class="dish rv" type="button" aria-pressed="false" data-price="10.40" style="--i:4"><span class="display">Fish balls</span><span class="price">$10.40</span></button></li>
+    <li><button class="dish rv" type="button" aria-pressed="false" data-price="11.70" style="--i:5"><span class="display">Pepper wings</span><span class="price">$11.70</span></button></li>
+  </ul>
+  <div class="tray" id="tray" hidden aria-live="polite">
+    <p class="tray-sum"><span id="tray-n">0 dishes</span> · <span id="tray-t">$0.00</span> before tax</p>
+    <div class="tray-acts">
+      <a class="btn" href="tel:+13478368857">Call it in</a>
+      <a class="btn btn--light" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online">Order online</a>
+    </div>
+  </div>
+  <p class="full-menu">The full menu runs much longer: soups, snacks, egg omelets, rice congee, chow fun and chow mein, noodle soup, fried rice, baked rice and spaghetti, steamed rice rolls, sandwiches, toast, desserts, drinks and party trays. <a href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online#menu-section">See every dish and price</a>.</p>
+</section>
+
+<section class="gallery" aria-labelledby="gal-h">
+  <h2 class="h2 rv" id="gal-h">The Hong Kong café table</h2>
+  <p class="lede rv" style="--i:1">Bakery in the morning, wok dishes by lunch, baked rice when it gets cold out. These are the classics a cha chaan teng is known for.</p>
+  <figure class="g g1 rv"><img src="assets/hong-kong-style-pineapple-bun-and-latte.jpg" width="1920" height="1440" alt="A Hong Kong pineapple bun with a crackly sugar top" loading="lazy"><figcaption>Pineapple bun, the bakery staple</figcaption></figure>
+  <figure class="g g2 rv"><img src="assets/cha-chaan-teng.jpg" width="1920" height="1440" alt="Hong Kong French toast with milk tea" loading="lazy"><figcaption>French toast and milk tea</figcaption></figure>
+  <figure class="g g3 rv"><img src="assets/cha-chaan-teng-7267.jpg" width="1920" height="1079" alt="Dining room of a cha chaan teng with green tables and booths" loading="lazy"><figcaption>A cha chaan teng dining room, Hong Kong</figcaption></figure>
+  <figure class="g g4 rv"><img src="assets/baked-pork-chop-rice-in-tomato-sauce.jpg" width="1920" height="1440" alt="Baked pork chop rice" loading="lazy"><figcaption>Baked pork chop rice</figcaption></figure>
+  <figure class="g g5 rv"><img src="assets/custard-egg-tarts-hong-kong.jpg" width="1920" height="2560" alt="Custard egg tarts" loading="lazy"><figcaption>Egg tarts</figcaption></figure>
+  <figure class="g g6 rv"><img src="assets/dry-fried-beef-ho-fun-ho-chiak.jpg" width="1920" height="1440" alt="Dry-fried beef chow fun" loading="lazy"><figcaption>Beef chow fun, wok-charred</figcaption></figure>
+</section>
+
+<section class="quote" aria-labelledby="q-h">
+  <h2 class="h2 rv" id="q-h">What the neighbours say</h2>
+  <blockquote>
+    <p class="qline display rv"><span>“Nice</span><span>staff,</span></p>
+    <p class="qline display rv" style="--i:1"><span>great</span><span>food,</span></p>
+    <p class="qline display rv" style="--i:2"><span>good</span><span>prices.”</span></p>
+  </blockquote>
+  <p class="qby rv"><span>A Google review</span><span>4.1 stars</span><span><a href="https://www.google.com/maps/place/Cafe+48+%26+Restaurant/@40.7554435,-73.7704296,17z/data=!4m6!3m5!1s0x89c261e7b7dc84d1:0x8510889e11a96ac1!8m2!3d40.7554435!4d-73.7689078!16s%2Fg%2F11c32b7qc8">229 reviews on Google</a></span></p>
+</section>
+
+<section class="visit" id="visit" aria-labelledby="v-h">
+  <h2 class="h2 rv" id="v-h">Come by</h2>
+  <ul class="rows">
+    <li class="row">Cafe 48 &amp; Restaurant</li>
+    <li class="row"><a href="https://www.google.com/maps/dir/?api=1&destination=212-09+48th+Ave+Bayside+NY+11364">212-09 48th Avenue</a></li>
+    <li class="row">Bayside, NY 11364</li>
+    <li class="row">Every day, 8am–8pm</li>
+    <li class="row"><a href="tel:+13478368857">(347) 836-8857</a></li>
+    <li class="row row--go">Hungry?<a class="go" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online" aria-label="Order online"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M12 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3"/></svg></a></li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <div class="invite">
+    <h2 class="h2">The milk tea is on.<br>Pull up a chair.</h2>
+    <a class="btn btn--light" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online">Order online</a>
+  </div>
+  <ul class="foot-links">
+    <li><a href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online#menu-section">Full menu</a></li>
+    <li><a href="tel:+13478368857">(347) 836-8857</a></li>
+    <li><a href="https://www.google.com/maps/dir/?api=1&destination=212-09+48th+Ave+Bayside+NY+11364">Directions</a></li>
+    <li><a href="https://www.google.com/maps/place/Cafe+48+%26+Restaurant/@40.7554435,-73.7704296,17z/data=!4m6!3m5!1s0x89c261e7b7dc84d1:0x8510889e11a96ac1!8m2!3d40.7554435!4d-73.7689078!16s%2Fg%2F11c32b7qc8">Reviews</a></li>
+  </ul>
+  <div class="legal">
+    <p>© 2026 Cafe 48 &amp; Restaurant · 212-09 48th Ave, Bayside, NY</p>
+    <p class="credits">Pictures of Hong Kong café dishes: <a href="https://commons.wikimedia.org/wiki/File:Baked_Pork_Chop_Rice_in_Tomato_Sauce_with_Cheese.jpg">Baked pork chop rice</a> by Ceeseven, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/wiki/File:Hong_Kong_Milk_Tea,_Cha_Chaan_Teng-style_with_Black_and_White_cup.jpg">Hot milk tea</a> by Nikoletic126, CC0; <a href="https://commons.wikimedia.org/wiki/File:Hong_Kong_Milk_Tea_(Cold)_-_Bun_House_2025-01-07.jpg">Iced milk tea</a> by Andy Li, CC0; <a href="https://commons.wikimedia.org/wiki/File:Cha_Chaan_Teng_7267.JPG">Cha Chaan Teng 7267</a> by T1NH0, <a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>; <a href="https://commons.wikimedia.org/wiki/File:Cha_Chaan_Teng.jpg">Cha Chaan Teng</a> by Kansir, <a href="https://creativecommons.org/licenses/by/2.0">CC BY 2.0</a>; <a href="https://commons.wikimedia.org/wiki/File:Hong_Kong_style_pineapple_bun_and_latte_-_Ikigai_Coffee_2024-07-01.jpg">Pineapple bun</a> by Andy Li, CC0; <a href="https://commons.wikimedia.org/wiki/File:Custard%2BEgg%2BTarts%2B-%2BHong%2BKong.jpg">Egg tarts</a> by Donatingpictures, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>; <a href="https://commons.wikimedia.org/wiki/File:Dry_Fried_Beef_Ho_Fun_-_Ho_Chiak_2023-12-08.jpg">Beef ho fun</a> by Andy Li, CC0; <a href="https://commons.wikimedia.org/wiki/File:A_set_breakfast_in_Cha_chaan_teng_in_Macau.jpg">Set breakfast</a> by Pauloleong2002, <a href="https://creativecommons.org/licenses/by-sa/4.0">CC BY-SA 4.0</a>. All via Wikimedia Commons.</p>
+  </div>
+  <p class="giant display rv" aria-hidden="true">Cafe 48</p>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+
+// Pinned hero: swap the portrait (and the ground colour) as the page scrolls through the hero.
+const hero = document.querySelector('.hero');
+const stage = document.getElementById('stage');
+const frames = [...document.querySelectorAll('.frame')];
+const count = document.getElementById('count');
+let cur = -1;
+function onScroll() {
+  const r = hero.getBoundingClientRect();
+  // || 0: a zero-height viewport (hidden tab, embeds) would give NaN and stop the script
+  const p = Math.min(0.999, Math.max(0, -r.top / (r.height - innerHeight) || 0));
+  const i = Math.floor(p * frames.length);
+  if (i === cur) return;
+  cur = i;
+  frames.forEach((f, n) => f.classList.toggle('on', n === i));
+  stage.style.setProperty('--ground', frames[i].dataset.ground);
+  count.textContent = i + 1;
+  document.getElementById('now').textContent = frames[i].querySelector('img').dataset.name;
+}
+addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+// Open / closed right now, in Bayside's own time zone.
+(function status() {
+  const ny = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+  const mins = ny.getHours() * 60 + ny.getMinutes();
+  const open = 8 * 60, close = 20 * 60;
+  const el = document.getElementById('status');
+  if (mins >= open && mins < close) {
+    const left = close - mins, h = Math.floor(left / 60), m = left % 60;
+    el.innerHTML = '<b>Open now</b> · closes in ' + (h ? h + 'h ' : '') + m + 'm';
+  } else {
+    el.innerHTML = '<b>Closed now</b> · opens at 8am';
+  }
+})();
+
+// Order tray: tap dishes, see the running total.
+const dishes = [...document.querySelectorAll('.dish')];
+const tray = document.getElementById('tray');
+function sum() {
+  const on = dishes.filter(d => d.getAttribute('aria-pressed') === 'true');
+  const t = on.reduce((s, d) => s + Number(d.dataset.price), 0);
+  tray.hidden = on.length === 0;
+  document.getElementById('tray-n').textContent = on.length + (on.length === 1 ? ' dish' : ' dishes');
+  document.getElementById('tray-t').textContent = '$' + t.toFixed(2);
+}
+dishes.forEach(d => d.addEventListener('click', () => {
+  d.setAttribute('aria-pressed', d.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+  sum();
+}));
+
+// 3D tilt that follows the pointer: hero portrait and gallery pictures.
+if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+  const tilt = (el, target, max) => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      const t = target();
+      t.style.setProperty('--ry', (x * max) + 'deg');
+      t.style.setProperty('--rx', (-y * max) + 'deg');
+      t.style.setProperty('--s', 1.03);
+    });
+    el.addEventListener('pointerleave', () => {
+      const t = target();
+      ['--rx', '--ry', '--s'].forEach(p => t.style.removeProperty(p));
+    });
+  };
+  tilt(stage, () => frames[cur], 14);
+  document.querySelectorAll('.g').forEach(g => tilt(g, () => g.querySelector('img'), 12));
+}
+
+// Entrances, once per element.
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { rootMargin: '0px 0px -10% 0px' });
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
