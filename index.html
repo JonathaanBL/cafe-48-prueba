@@ -320,8 +320,39 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
   .spin-ctl .tabs { order: 3; width: 100%; }
 }
 
+/* ---------- premium layer (after 21st: vertical cut reveal, magnetic button, text marquee, cursor follower) ---------- */
+.title .ch { display: inline-block; white-space: pre; }
+.band {
+  display: block; overflow: hidden; background: var(--ink); color: var(--bg); text-decoration: none;
+  padding: clamp(28px, 4vw, 56px) 0; margin-top: var(--gap);
+}
+.band-track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
+.band-track span { font-size: clamp(3.5rem, 8vw, 8rem); padding-right: .35em; white-space: nowrap; }
+.band-track span:nth-child(even) { color: #8f97ff; }
+.band:hover .band-track, .band:focus-visible .band-track { animation-play-state: paused; }
+.band:focus-visible { outline-offset: -6px; outline-color: var(--bg); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.cursor {
+  position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none;
+  width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  background: var(--ink); color: var(--bg);
+  display: grid; place-items: center; font-weight: 700; font-size: var(--step-small); white-space: nowrap;
+  transition: width .35s var(--ease), height .35s var(--ease), margin .35s var(--ease), background-color .25s, opacity .25s;
+  opacity: 0;
+}
+.cursor span { opacity: 0; transition: opacity .2s; }
+.cursor.on { opacity: 1; }
+.cursor.big { width: 92px; height: 92px; margin: -46px 0 0 -46px; }
+.cursor.big span { opacity: 1; }
+.cursor.light { background: var(--bg); color: var(--ink); }
+.btn, .arrow, .go { transition: transform .2s var(--ease), background-color .2s var(--ease), color .2s var(--ease), translate .55s cubic-bezier(.34, 1.56, .64, 1); }
+@media (hover: none), (prefers-reduced-motion: reduce) { .cursor { display: none; } }
+
 /* ---------- motion (3D) ---------- */
 @media (prefers-reduced-motion: no-preference) {
+  /* the name is cut in letter by letter, bottom to top, settled within a second */
+  .js .title .ch { animation: cut .7s var(--ease) both; animation-delay: calc(var(--c) * 55ms); }
+  @keyframes cut { from { clip-path: inset(100% 0 0 0); transform: translateY(35%); } to { clip-path: inset(-10% 0 -10% 0); transform: none; } }
   /* hero portraits swing in like a door, then follow the pointer */
   .frame { transform: translateX(-50%) perspective(1400px) rotateY(-32deg) translateZ(-160px); transform-origin: 0 50%; }
   .frame.on { transform: translateX(-50%) perspective(1400px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); }
@@ -563,6 +594,10 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
   <figure class="g g6 rv"><img src="assets/dry-fried-beef-ho-fun-ho-chiak.jpg" width="1920" height="1440" alt="Dry-fried beef chow fun" loading="lazy"><figcaption>Beef chow fun, wok-charred</figcaption></figure>
 </section>
 
+<a class="band" id="band" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online" aria-label="Order online" data-cursor="order">
+  <span class="band-track display" aria-hidden="true"></span>
+</a>
+
 <section class="quote" aria-labelledby="q-h">
   <h2 class="h2 rv" id="q-h">What the neighbours say</h2>
   <blockquote>
@@ -617,13 +652,19 @@ let lang = 'en';
 const S = {
   en: { open: 'Open now', closesIn: 'closes in', closed: 'Closed now', opensAt: 'opens at 8am',
         frames: ['Iced milk tea', 'Egg tarts', 'Baked pork chop rice', 'Beef chow fun'], inOrder: 'In your order · ',
-        pour: 'Pouring your cup', full: 'Ready to drink', prev: 'Previous section', next: 'Next section', spin: 'Menu carousel' },
+        pour: 'Pouring your cup', full: 'Ready to drink', prev: 'Previous section', next: 'Next section', spin: 'Menu carousel',
+        band: ['Iced milk tea', 'Egg tarts', 'Pineapple buns', 'Baked pork chop rice', 'Beef chow fun', 'Wonton soup'],
+        add: 'Add', remove: 'Remove', drag: 'Drag', order: 'Order online' },
   es: { open: 'Abierto', closesIn: 'cierra en', closed: 'Cerrado', opensAt: 'abre a las 8am',
         frames: ['Té con leche helado', 'Tartas de huevo', 'Arroz al horno con chuleta', 'Chow fun de res'], inOrder: 'En tu pedido · ',
-        pour: 'Sirviendo tu taza', full: 'Listo para tomar', prev: 'Sección anterior', next: 'Sección siguiente', spin: 'Carrusel del menú' },
+        pour: 'Sirviendo tu taza', full: 'Listo para tomar', prev: 'Sección anterior', next: 'Sección siguiente', spin: 'Carrusel del menú',
+        band: ['Té con leche helado', 'Tartas de huevo', 'Pan piña', 'Arroz al horno', 'Chow fun de res', 'Sopa wonton'],
+        add: 'Agregar', remove: 'Quitar', drag: 'Arrastra', order: 'Pedir en línea' },
   'zh-Hant': { open: '營業中', closesIn: '距離關門還有', closed: '休息中', opensAt: '早上 8 時開門',
         frames: ['凍奶茶', '蛋撻', '焗豬扒飯', '乾炒牛河'], inOrder: '已加入 · ',
-        pour: '正在斟茶', full: '可以飲啦', prev: '上一部分', next: '下一部分', spin: '旋轉餐牌' }
+        pour: '正在斟茶', full: '可以飲啦', prev: '上一部分', next: '下一部分', spin: '旋轉餐牌',
+        band: ['凍奶茶', '蛋撻', '菠蘿包', '焗豬扒飯', '乾炒牛河', '雲吞湯'],
+        add: '加入', remove: '移除', drag: '拖動', order: '網上落單' }
 };
 
 // Page text per language, keyed by CSS selector; English is read from the page itself.
@@ -687,6 +728,20 @@ const T = {
 };
 const EN = {};
 Object.keys(T.es).forEach(k => { EN[k] = $$(k).map(el => el.innerHTML); });
+
+// The name is split into letters for the cut-in reveal; screen readers still get one word.
+(function splitTitle() {
+  const h1 = $('.title'), text = h1.textContent.trim();
+  h1.setAttribute('aria-label', text);
+  h1.innerHTML = [...text].map((ch, i) => '<span class="ch" aria-hidden="true" style="--c:' + i + '">' + ch + '</span>').join('');
+})();
+
+// Dish marquee: the list twice, so sliding it by half loops without a seam.
+function fillBand() {
+  const items = S[lang].band.map(t => '<span>' + t + '</span>').join('');
+  $('.band-track').innerHTML = items + items;
+  $('#band').setAttribute('aria-label', S[lang].order);
+}
 
 // Pinned hero: swap the portrait (and the ground colour) as the page scrolls through the hero.
 const hero = $('.hero'), stage = $('#stage'), frames = $$('.frame'), count = $('#count');
@@ -904,6 +959,7 @@ function setLang(l) {
   sum();
   labelTabs();
   layout();
+  fillBand();
   try { localStorage.setItem('lang', l); } catch (e) {}
 }
 $$('.langs button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
@@ -930,6 +986,44 @@ if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').mat
   };
   tilt(stage, () => frames[cur], 14);
   $$('.g').forEach(g => tilt(g, () => g.querySelector('img'), 12));
+
+  // Magnetic buttons: they lean toward the pointer and spring back on leave.
+  $$('.btn, .arrow, .go').forEach(b => {
+    b.addEventListener('pointermove', e => {
+      const r = b.getBoundingClientRect();
+      b.style.translate = ((e.clientX - r.left - r.width / 2) * 0.3).toFixed(1) + 'px ' + ((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1) + 'px';
+    });
+    b.addEventListener('pointerleave', () => { b.style.translate = ''; });
+  });
+
+  // Cursor follower: a dot that eases after the pointer and says what a click will do.
+  const dot = document.createElement('div'), word = document.createElement('span');
+  dot.className = 'cursor';
+  dot.setAttribute('aria-hidden', 'true');
+  dot.append(word);
+  document.body.append(dot);
+  let tx = 0, ty = 0, cx = 0, cy = 0, moving = false;
+  const follow = () => {
+    cx += (tx - cx) * 0.2;
+    cy += (ty - cy) * 0.2;
+    dot.style.transform = 'translate(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px)';
+    if (Math.abs(tx - cx) + Math.abs(ty - cy) > 0.5) requestAnimationFrame(follow); else moving = false;
+  };
+  addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    tx = e.clientX; ty = e.clientY;
+    if (!dot.classList.contains('on')) { cx = tx; cy = ty; dot.classList.add('on'); }
+    const t = e.target.closest ? e.target : document.body;
+    const dish = t.closest('.dish');
+    const label = dish ? S[lang][dish.getAttribute('aria-pressed') === 'true' ? 'remove' : 'add']
+      : t.closest('.stage3d') ? S[lang].drag
+      : t.closest('#band') ? S[lang].order : '';
+    word.textContent = label;
+    dot.classList.toggle('big', !!label);
+    dot.classList.toggle('light', !!t.closest('.foot, #band, .menu'));
+    if (!moving) { moving = true; requestAnimationFrame(follow); }
+  });
+  document.documentElement.addEventListener('mouseleave', () => dot.classList.remove('on'));
 }
 
 // Entrances, once per element.

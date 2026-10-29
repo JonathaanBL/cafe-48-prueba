@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "project": {
+    "name": "cafe-48",
+    "productType": "restaurant landing page",
+    "stack": ["html", "css", "vanilla-js", "three.js r128"]
+  },
+  "sources": {
+    "tokens": [],
+    "components": [],
+    "assets": [
+      "assets"
+    ],
+    "instructions": []
+  },
+  "design": {
+    "colorMode": "light",
+    "colors": { "bg": "#eef0f3", "surface": "#e2e5ea", "ink": "#0b0c0e", "muted": "#5d6470", "accent": "#1f2de6" },
+    "typography": { "family": "Chivo", "display": "900 uppercase, tracking -0.05em, leading 0.88" },
+    "spacing": {},
+    "radius": {},
+    "shadows": {},
+    "motion": {},
+    "density": "unknown"
+  },
+  "components": {
+    "installed": [],
+    "preferredPrimitives": [],
+    "patterns": []
+  },
+  "constraints": {
+    "must": ["One typeface (Chivo)", "Cool grey ground, near-black ink, one cobalt accent", "Square corners on media and buttons", "Every motion has a prefers-reduced-motion fallback"],
+    "avoid": ["Gradients", "Shadows at rest", "Eyebrow labels", "Monospace", "Glass/backdrop blur"]
+  },
+  "decisions": ["2026-10-29: Premium pass ported from 21st patterns into vanilla JS (no React): Vertical Cut Reveal for the hero name, Magnetic Button for every button, Infinite Text Marquee as an order-online dish band, Cursor Follower with action labels (Add/Remove/Drag/Order)."],
+  "evidence": [],
+  "generatedAt": "2026-10-29T14:01:24.002Z"
+}
