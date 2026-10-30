@@ -10,13 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #eef0f3;
-  --surface: #e2e5ea;
-  --ink: #0b0c0e;
-  --muted: #5d6470;
-  --accent: #1f2de6;
+  --bg: #eaf1ec;
+  --surface: #dbe7df;
+  --ink: #10211b;
+  --muted: #4a5c54;
+  --accent: #c8102e;
   --accent-ink: #ffffff;
-  --field-1: #1f2de6;
+  --field-1: #0b5d4b;
   --field-1-ink: #ffffff;
 
   --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
@@ -210,7 +210,7 @@ h1, h2, h3, p { margin: 0; }
 .invite { grid-column: 1 / 9; }
 .invite .h2 { font-size: var(--step-head); margin-bottom: 40px; }
 .foot-links { grid-column: 10 / 13; list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-weight: 700; }
-.foot-links a { text-decoration: none; } .foot-links a:hover { color: #8f97ff; }
+.foot-links a { text-decoration: none; } .foot-links a:hover { color: #ff8f96; }
 .legal {
   grid-column: 1 / 13; margin-top: 12vh; display: flex; justify-content: space-between; gap: 32px;
   font-size: var(--step-small); line-height: 1.5;
@@ -328,7 +328,7 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
 }
 .band-track { display: flex; width: max-content; animation: marquee 38s linear infinite; }
 .band-track span { font-size: clamp(3.5rem, 8vw, 8rem); padding-right: .35em; white-space: nowrap; }
-.band-track span:nth-child(even) { color: #8f97ff; }
+.band-track span:nth-child(even) { color: #ff8f96; }
 .band:hover .band-track, .band:focus-visible .band-track { animation-play-state: paused; }
 .band:focus-visible { outline-offset: -6px; outline-color: var(--bg); }
 @keyframes marquee { to { transform: translateX(-50%); } }
@@ -347,6 +347,27 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
 .cursor.light { background: var(--bg); color: var(--ink); }
 .btn, .arrow, .go { transition: transform .2s var(--ease), background-color .2s var(--ease), color .2s var(--ease), translate .55s cubic-bezier(.34, 1.56, .64, 1); }
 @media (hover: none), (prefers-reduced-motion: reduce) { .cursor { display: none; } }
+
+/* ---------- cha chaan teng tile strip ---------- */
+.tiles {
+  height: clamp(56px, 7vw, 96px);
+  background: #f7faf8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' fill='%230b5d4b'%3E%3Crect x='2' y='2' width='16' height='7'/%3E%3Crect x='2' y='11' width='16' height='7'/%3E%3Crect x='22' y='2' width='7' height='16'/%3E%3Crect x='31' y='2' width='7' height='16'/%3E%3Crect x='2' y='22' width='7' height='16'/%3E%3Crect x='11' y='22' width='7' height='16'/%3E%3Crect x='22' y='22' width='16' height='7'/%3E%3Crect x='22' y='31' width='16' height='7'/%3E%3C/svg%3E") repeat-x center;
+}
+
+/* ---------- phone action bar: call, directions, order, always one thumb away ---------- */
+.bar { display: none; }
+@media (max-width: 900px) {
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: 1fr 1fr 1fr;
+    background: var(--ink); color: var(--bg); padding-bottom: env(safe-area-inset-bottom);
+    transition: transform .35s var(--ease), visibility .35s;
+  }
+  .js .bar { transform: translateY(100%); visibility: hidden; }
+  .js .bar.on { transform: none; visibility: visible; }
+  .bar a { min-height: 56px; display: grid; place-items: center; padding: 0 8px; font-weight: 700; text-align: center; text-decoration: none; }
+  .bar .btn { font-size: inherit; }
+  .foot { padding-bottom: 56px; }
+}
 
 /* ---------- motion (3D) ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -446,7 +467,7 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
       </ul>
     </nav>
 
-    <figure class="frame on" data-ground="#eef0f3">
+    <figure class="frame on" data-ground="#eaf1ec">
       <img src="assets/hong-kong-milk-tea-cold-bun-house.jpg" width="1920" height="2550" alt="Iced Hong Kong-style milk tea in a red longevity mug on a marble table" data-name="Iced milk tea">
     </figure>
     <figure class="frame" data-ground="#e3ebef">
@@ -481,6 +502,8 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
   </figure>
   <p class="note rv" style="--i:3"><strong>Good to know</strong>Steamed rice rolls from 11am to 3pm only. Pickup any time we’re open, delivery within 10 miles, party trays on request.</p>
 </section>
+
+<div class="tiles" aria-hidden="true"></div>
 
 <section class="tea" id="tea" aria-labelledby="tea-h">
   <div class="tea-stage">
@@ -623,6 +646,14 @@ html[lang="zh-Hant"] .tabs button { font-family: inherit; }
   </div>
 </section>
 
+<div class="tiles" aria-hidden="true"></div>
+
+<nav class="bar" id="bar" aria-label="Quick actions">
+  <a id="bar-call" href="tel:+13478368857">Call</a>
+  <a id="bar-map" href="https://www.google.com/maps/dir/?api=1&destination=212-09+48th+Ave+Bayside+NY+11364">Directions</a>
+  <a class="btn" href="https://www.cafe48oaklandgarden.com/1x8vrj85/cafe-48-bayside-11364/order-online">Order online</a>
+</nav>
+
 <footer class="foot">
   <div class="invite">
     <h2 class="h2">The milk tea is on.<br>Pull up a chair.</h2>
@@ -693,6 +724,7 @@ const T = {
     '.g figcaption': ['Pan piña, el clásico de la panadería', 'Tostada francesa y té con leche', 'Comedor de un cha chaan teng, Hong Kong', 'Arroz al horno con chuleta de cerdo', 'Tartas de huevo', 'Chow fun de res, al wok'],
     '#q-h': 'Lo que dicen los vecinos',
     '.qby > span:nth-child(1)': 'Una reseña de Google', '.qby > span:nth-child(2)': '4.1 estrellas', '.qby a': '229 reseñas en Google',
+    '#bar-call': 'Llamar', '#bar-map': 'Cómo llegar',
     '#v-h': 'Ven a vernos', '.row:nth-child(4)': 'Todos los días, 8am–8pm', '.hg': '¿Hambre?',
     '.invite .h2': 'El té está listo.<br>Siéntate.',
     '.foot-links a': ['Menú completo', '(347) 836-8857', 'Cómo llegar', 'Reseñas']
@@ -721,6 +753,7 @@ const T = {
     '.g figcaption': ['菠蘿包，餅店必備', '西多士配奶茶', '香港茶餐廳的用餐區', '焗豬扒飯', '蛋撻', '乾炒牛河'],
     '#q-h': '街坊點評',
     '.qby > span:nth-child(1)': 'Google 評論', '.qby > span:nth-child(2)': '4.1 星', '.qby a': 'Google 上 229 則評論',
+    '#bar-call': '致電', '#bar-map': '路線',
     '#v-h': '歡迎光臨', '.row:nth-child(4)': '每天 上午 8 時至晚上 8 時', '.hg': '肚餓？',
     '.invite .h2': '奶茶已經沖好。<br>坐低嘆杯茶。',
     '.foot-links a': ['完整菜單', '(347) 836-8857', '路線', '評論']
@@ -749,6 +782,7 @@ let cur = -1;
 function onScroll() {
   const r = hero.getBoundingClientRect();
   // || 0: a zero-height viewport (hidden tab, embeds) would give NaN and stop the script
+  $('#bar').classList.toggle('on', r.bottom <= 0);
   const p = Math.min(0.999, Math.max(0, -r.top / (r.height - innerHeight) || 0));
   const i = Math.floor(p * frames.length);
   if (i === cur) return;
@@ -899,7 +933,7 @@ function initCup() {
   scene.add(cup);
   // body: one lathe profile, outside up and inside back down, so the wall has thickness
   cup.add(new G.Mesh(new G.LatheGeometry([V(0, 0), V(1, 0), V(1.1, 0.1), V(1.22, 1.9), V(1.28, 2.05), V(1.17, 2.05), V(1.1, 1.9), V(0.98, 0.22), V(0, 0.22)], 72), porcelain));
-  const band = new G.Mesh(new G.CylinderGeometry(1.216, 1.196, 0.32, 72, 1, true), new G.MeshStandardMaterial({ color: 0x1f2de6, roughness: 0.35 }));
+  const band = new G.Mesh(new G.CylinderGeometry(1.216, 1.196, 0.32, 72, 1, true), new G.MeshStandardMaterial({ color: 0x8f0a20, roughness: 0.35 }));
   band.position.y = 1.55;
   cup.add(band);
   const handle = new G.Mesh(new G.TorusGeometry(0.48, 0.11, 20, 48, Math.PI), porcelain);
@@ -907,7 +941,7 @@ function initCup() {
   handle.position.set(1.18, 1.1, 0);
   cup.add(handle);
   cup.add(new G.Mesh(new G.LatheGeometry([V(0, -0.12), V(1.7, -0.12), V(2.15, 0.06), V(2.05, 0.08), V(1.6, 0), V(0, 0)], 72), porcelain));
-  const tea = new G.Mesh(new G.CylinderGeometry(1, 1, 1, 72), new G.MeshStandardMaterial({ color: 0x8a5634, roughness: 0.12 }));
+  const tea = new G.Mesh(new G.CylinderGeometry(1, 1, 1, 72), new G.MeshStandardMaterial({ color: 0x6b3f22, roughness: 0.12 }));
   cup.add(tea);
 
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

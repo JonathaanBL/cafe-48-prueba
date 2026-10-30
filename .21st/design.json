@@ -15,7 +15,7 @@
   },
   "design": {
     "colorMode": "light",
-    "colors": { "bg": "#eef0f3", "surface": "#e2e5ea", "ink": "#0b0c0e", "muted": "#5d6470", "accent": "#1f2de6" },
+    "colors": { "bg": "#eaf1ec", "surface": "#dbe7df", "ink": "#10211b", "muted": "#4a5c54", "accent": "#c8102e", "field": "#0b5d4b" },
     "typography": { "family": "Chivo", "display": "900 uppercase, tracking -0.05em, leading 0.88" },
     "spacing": {},
     "radius": {},
@@ -29,10 +29,10 @@
     "patterns": []
   },
   "constraints": {
-    "must": ["One typeface (Chivo)", "Cool grey ground, near-black ink, one cobalt accent", "Square corners on media and buttons", "Every motion has a prefers-reduced-motion fallback"],
+    "must": ["One typeface (Chivo)", "Pale celadon ground, dark green ink, jade field, one longevity red accent", "Square corners on media and buttons", "Every motion has a prefers-reduced-motion fallback"],
     "avoid": ["Gradients", "Shadows at rest", "Eyebrow labels", "Monospace", "Glass/backdrop blur"]
   },
-  "decisions": ["2026-10-29: Premium pass ported from 21st patterns into vanilla JS (no React): Vertical Cut Reveal for the hero name, Magnetic Button for every button, Infinite Text Marquee as an order-online dish band, Cursor Follower with action labels (Add/Remove/Drag/Order)."],
+  "decisions": ["2026-10-30: Palette moved from cobalt/grey to cha chaan teng jade and red, with a basket-weave tile strip.", "2026-10-29: Premium pass ported from 21st patterns into vanilla JS (no React): Vertical Cut Reveal for the hero name, Magnetic Button for every button, Infinite Text Marquee as an order-online dish band, Cursor Follower with action labels (Add/Remove/Drag/Order)."],
   "evidence": [],
   "generatedAt": "2026-10-29T14:01:24.002Z"
 }
